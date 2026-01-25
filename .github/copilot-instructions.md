@@ -1,203 +1,78 @@
-# SAGE Benchmark Agent - GitHub Copilot Instructions
+# SAGE Benchmark Agent - Copilot Instructions
 
-## Project Overview
+## Project Summary
 
-**SAGE Benchmark Agent** is a configuration-driven experiment framework for evaluating agent capabilities through three core experiments:
+This repo is the standalone benchmark for agent algorithm evaluation. It contains the
+experiment framework, configs, and evaluation logic for:
 
-1. **Tool Selection** - Tool retrieval and ranking evaluation
-2. **Planning** - Multi-step planning with tool composition  
-3. **Timing Detection** - Timing judgment for tool invocation decisions
+1. Tool selection
+2. Task planning
+3. Timing detection
 
-**Architecture**: Layer L5 (Applications - Benchmarking)
-**Dependencies**: sage.libs (for agent interfaces), sage.common (L1)
+**Layer**: L5 (Applications - Benchmarking)
+**Dependencies**: isage-common (L1), isage-libs (agent interfaces)
 
-## Repository Structure
+## Key Architecture
 
-```
-sage-benchmark-agent/
-├── src/sage/benchmark/benchmark_agent/
-│   ├── __init__.py
-│   ├── __main__.py              # CLI entry point
-│   ├── acebench_loader.py       # ACE Bench data loader
-│   ├── adapter_registry.py      # Agent adapter registry
-│   ├── data_paths.py            # Data path management
-│   ├── tools_loader.py          # Tool loading utilities
-│   ├── config/                  # Experiment configurations
-│   │   ├── config_loader.py
-│   │   ├── default_config.yaml
-│   │   ├── tool_selection_exp.yaml
-│   │   ├── planning_exp.yaml
-│   │   └── timing_detection_exp.yaml
-│   ├── evaluation/              # Evaluation framework
-│   │   ├── evaluator.py
-│   │   ├── metrics.py
-│   │   ├── report_builder.py
-│   │   └── unified_tool_selection.py
-│   ├── experiments/             # Experiment implementations
-│   │   ├── base_experiment.py
-│   │   ├── tool_selection_exp.py
-│   │   ├── planning_exp.py
-│   │   └── timing_detection_exp.py
-│   └── scripts/                 # Utility scripts
-├── tests/                       # Test suite
-│   ├── conftest.py
-│   ├── test_evaluation.py
-│   ├── test_experiments.py
-│   └── ...
-├── .github/
-│   ├── copilot-instructions.md  # This file
-│   └── workflows/
-│       ├── ci.yml
-│       └── publish.yml
-├── pyproject.toml
-└── README.md
-```
+- Entry point: `sage.benchmark.benchmark_agent.__main__`
+- Core configs: `experiments/base_experiment.py`
+- Experiment impls: `experiments/{tool_selection,planning,timing_detection}_exp.py`
+- Evaluation: `evaluation/` (metrics, evaluator, report builder)
+- Registry: `adapter_registry.py` (maps strategy names to adapters)
+- Data paths: `data_paths.py` + `DATA_PATHS.md`
 
-## Core Concepts
+## Non-Negotiables
 
-### 1. Experiment Framework
+- Use Pydantic models for config validation.
+- Follow prepare/run/finalize lifecycle in experiments.
+- Keep code compatible with Python 3.11+.
+- Prefer centralized paths via `data_paths.py` and `DataManager`.
+- Preserve CLI behavior in `__main__.py`.
 
-All experiments follow the standard lifecycle pattern:
+## Config Schema (Actual)
 
-```python
-class BaseExperiment:
-    """Base class for all benchmark experiments."""
-    
-    def prepare(self) -> None:
-        """Prepare experiment (load data, initialize models)."""
-        pass
-    
-    def run(self) -> ExperimentResult:
-        """Run experiment and return results."""
-        pass
-    
-    def finalize(self) -> None:
-        """Clean up resources."""
-        pass
-```
+- `experiment` is a literal: `tool_selection | planning | timing_detection`.
+- Common fields are in `ExperimentConfig`.
+- Specific fields exist in:
+    - `ToolSelectionConfig`
+    - `PlanningConfig`
+    - `TimingDetectionConfig`
 
-### 2. Configuration System
+If adding new config fields, update the relevant Pydantic model and defaults.
 
-- **YAML-based**: All experiments configured via YAML files
-- **Environment Variables**: Support `${VAR:default}` substitution
-- **Pydantic Validation**: Config models use Pydantic for validation
-- **Hierarchical**: Configs can inherit from `default_config.yaml`
+## Adapter Registry Rules
 
-Example config structure:
-```yaml
-experiment:
-  name: "tool_selection_benchmark"
-  type: "tool_selection"
-  output_dir: "${SAGE_OUTPUT_DIR:./output}"
+- Strategy names are string keys resolved in `adapter_registry.py`.
+- Adapters must expose `predict()` and conform to the internal protocols.
+- Keep benchmark constants (e.g., embedding model, temperature) centralized.
 
-data:
-  source: "acebench"
-  split: "test"
-  max_samples: 100
+## Coding Style
 
-model:
-  name: "gpt-4"
-  temperature: 0.0
-  max_tokens: 2048
+- Type hints on all public APIs.
+- Google-style docstrings.
+- Format with Black (line length 100) and lint with Ruff.
+- Avoid breaking public import paths in `__init__.py`.
 
-evaluation:
-  metrics:
-    - "precision@k"
-    - "recall@k"
-    - "ndcg@k"
-    - "mrr"
-```
+## Testing Expectations
 
-### 3. Agent Adapters
+- Add or update tests under `tests/` for new logic.
+- Prefer deterministic outputs; seed is already in config.
+- If you add metrics, add unit tests for edge cases.
 
-The system supports different agent implementations through adapters:
+## What Not To Do
 
-- **ReactPlanner**: ReAct-style planning agents
-- **ToolSelectionAgent**: Specialized tool selection agents
-- **CustomAgent**: User-defined agent implementations
+- Do not import L4+ middleware packages.
+- Do not bypass `DataManager` for data sources.
+- Do not hardcode data paths or model names in experiment classes.
+- Do not change CLI flags without updating docs and tests.
 
-Adapters registered in `adapter_registry.py`:
-```python
-from sage.benchmark.benchmark_agent.adapter_registry import register_adapter
+## Typical Workflows
 
-@register_adapter("my_agent")
-class MyAgentAdapter:
-    def __init__(self, config: dict):
-        self.config = config
-    
-    def select_tools(self, query: str, tools: list) -> list:
-        """Select tools for the given query."""
-        pass
-```
-
-### 4. Evaluation Metrics
-
-Core metrics for agent evaluation:
-
-- **Tool Selection**:
-  - Precision@k, Recall@k
-  - NDCG@k (Normalized Discounted Cumulative Gain)
-  - MRR (Mean Reciprocal Rank)
-  
-- **Planning**:
-  - Plan accuracy
-  - Step efficiency
-  - Tool composition quality
-  
-- **Timing Detection**:
-  - Decision accuracy
-  - False positive/negative rates
-
-## Coding Guidelines
-
-### 1. Python Style
-
-- **Python Version**: 3.11+
-- **Type Hints**: Required for all public APIs
-- **Docstrings**: Google style for all modules, classes, functions
-- **Formatting**: Black (line length 100)
-- **Linting**: Ruff
-- **Testing**: pytest with >80% coverage
-
-Example:
-```python
-"""Experiment module for tool selection benchmarks."""
-
-from __future__ import annotations
-
-from pathlib import Path
-from typing import Any
-
-from pydantic import BaseModel
-
-
-class ExperimentConfig(BaseModel):
-    """Configuration for tool selection experiment.
-    
-    Attributes:
-        name: Experiment name
-        output_dir: Directory to save results
-        max_samples: Maximum number of samples to evaluate
-    """
-    name: str
-    output_dir: Path
-    max_samples: int = 100
-
-
-def run_experiment(config: ExperimentConfig) -> dict[str, float]:
-    """Run tool selection experiment.
-    
-    Args:
-        config: Experiment configuration
-        
-    Returns:
-        Dictionary mapping metric names to values
-        
-    Raises:
-        ValueError: If configuration is invalid
-        FileNotFoundError: If data files not found
-    """
-    # Implementation
+- CLI:
+    - `sage-agent-bench --config config/tool_selection_exp.yaml`
+- Programmatic:
+    - load config via `ConfigLoader`
+    - instantiate experiment and call `prepare()`, `run()`, `finalize()`
     pass
 ```
 
