@@ -3,9 +3,9 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "isage-benchmark-agent"
+name = "isage-tooluse-benchmark"
 version = "0.1.0.1"
-description = "SAGE Benchmark Agent - Agent capability evaluation framework"
+description = "SAGE Tool Use Benchmark - Tool selection and use evaluation framework"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,9 +14,10 @@ authors = [
 keywords = [
     "sage",
     "benchmark",
-    "agent",
     "tool-selection",
+    "tool-use",
     "planning",
+    "timing-detection",
     "evaluation",
     "intellistream",
 ]
