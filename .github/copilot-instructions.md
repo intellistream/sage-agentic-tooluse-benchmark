@@ -276,18 +276,18 @@ For local development with other SAGE packages:
 
 ```bash
 # Clone repos
-git clone https://github.com/intellistream/sage-benchmark-agent.git
+git clone https://github.com/intellistream/sage-agent-benchmark.git
 git clone https://github.com/intellistream/sage-agentic.git
 
 # Install in editable mode
-cd sage-benchmark-agent
+cd sage-agent-benchmark
 pip install -e ".[dev]"
 
 cd ../sage-agentic
 pip install -e .
 
 # Or use VS Code workspace to work with multiple repos
-code sage-benchmark-agent.code-workspace
+code sage-agent-benchmark.code-workspace
 ```
 
 ## Performance Considerations
@@ -308,7 +308,7 @@ code sage-benchmark-agent.code-workspace
 
 ## Tips for Copilot
 
-When helping with sage-benchmark-agent:
+When helping with sage-agent-benchmark:
 
 1. **Experiment Pattern**: Always follow prepare/run/finalize lifecycle
 2. **Config-Driven**: Use YAML configs with Pydantic validation

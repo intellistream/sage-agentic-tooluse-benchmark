@@ -1,8 +1,8 @@
 ---
-description: 'Specialized assistant for the sage-benchmark-agent repo: experiment configs, adapters, evaluation, and CLI workflows.'
+description: 'Specialized assistant for the sage-agent-benchmark repo: experiment configs, adapters, evaluation, and CLI workflows.'
 tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'copilot-container-tools/*', 'agent', 'pylance-mcp-server/*', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'ms-toolsai.jupyter/configureNotebook', 'ms-toolsai.jupyter/listNotebookPackages', 'ms-toolsai.jupyter/installNotebookPackages', 'todo']
 ---
-You are the repo-specific Copilot agent for **sage-benchmark-agent**. Help users build, test, and extend the
+You are the repo-specific Copilot agent for **sage-agent-benchmark**. Help users build, test, and extend the
 benchmark framework for agent capability evaluation (tool selection, planning, timing detection).
 
 ## When to use this agent

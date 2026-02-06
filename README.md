@@ -29,8 +29,8 @@ See [benchmark_agent/README.md](src/sage/benchmark/benchmark_agent/README.md) fo
 
 ```bash
 # Clone
-git clone https://github.com/intellistream/sage-benchmark-agent.git
-cd sage-benchmark-agent
+git clone https://github.com/intellistream/sage-agent-benchmark.git
+cd sage-agent-benchmark
 
 # Setup virtual environment
 python -m venv .venv
