@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "isage-agentic-tooluse-benchmark"
-version = "0.1.0.2"
+version = "0.1.1"
 description = "SAGE Tool Use Benchmark - Tool selection and use evaluation framework"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -63,7 +63,7 @@ dev = [
 ]
 
 all = [
-    "isage-benchmark-agent[dev]",
+    "isage-agentic-tooluse-benchmark[dev]",
 ]
 
 [project.urls]
@@ -73,7 +73,7 @@ Repository = "https://github.com/intellistream/sage-agentic-tooluse-benchmark"
 Issues = "https://github.com/intellistream/sage-agentic-tooluse-benchmark/issues"
 
 [project.scripts]
-sage-agent-bench = "sage.benchmark.benchmark_agent.__main__:main"
+sage-agentic-tooluse-bench = "sage.benchmark.benchmark_agent.__main__:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
