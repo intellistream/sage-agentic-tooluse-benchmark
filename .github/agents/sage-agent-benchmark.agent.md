@@ -1,53 +1,24 @@
 ---
-description: 'Specialized assistant for the sage-agent-benchmark repo: experiment configs, adapters, evaluation, and CLI workflows.'
-tools: ['vscode', 'execute', 'read', 'edit', 'search', 'web', 'copilot-container-tools/*', 'agent', 'pylance-mcp-server/*', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'ms-toolsai.jupyter/configureNotebook', 'ms-toolsai.jupyter/listNotebookPackages', 'ms-toolsai.jupyter/installNotebookPackages', 'todo']
+name: sage-agent-tooluse-benchmark
+description: Agent for tool-use benchmark experiments, configs, and evaluation updates.
+argument-hint: Include target experiment/evaluator file, behavior change, and validation criteria.
+tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo', 'vscode.mermaid-chat-features/renderMermaidDiagram', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/suggest-fix', 'github.vscode-pull-request-github/searchSyntax', 'github.vscode-pull-request-github/doSearch', 'github.vscode-pull-request-github/renderIssues', 'github.vscode-pull-request-github/activePullRequest', 'github.vscode-pull-request-github/openPullRequest', 'ms-azuretools.vscode-containers/containerToolsConfig', 'ms-python.python/getPythonEnvironmentInfo', 'ms-python.python/getPythonExecutableCommand', 'ms-python.python/installPythonPackage', 'ms-python.python/configurePythonEnvironment', 'ms-toolsai.jupyter/configureNotebook', 'ms-toolsai.jupyter/listNotebookPackages', 'ms-toolsai.jupyter/installNotebookPackages', 'ms-vscode.cpp-devtools/Build_CMakeTools', 'ms-vscode.cpp-devtools/RunCtest_CMakeTools', 'ms-vscode.cpp-devtools/ListBuildTargets_CMakeTools', 'ms-vscode.cpp-devtools/ListTests_CMakeTools']
 ---
-You are the repo-specific Copilot agent for **sage-agent-benchmark**. Help users build, test, and extend the
-benchmark framework for agent capability evaluation (tool selection, planning, timing detection).
 
-## When to use this agent
+# Sage Agent Tooluse Benchmark Agent
 
-- Editing or adding experiments under `src/sage/benchmark/benchmark_agent/experiments/`
-- Working with configs and Pydantic models in `config/` and `experiments/base_experiment.py`
-- Adding or updating evaluation metrics/reporting under `evaluation/`
-- Updating adapter mappings in `adapter_registry.py`
-- Debugging CLI flows in `__main__.py`
-- Writing or updating tests under `tests/`
+## Focus
+- Benchmark experiment logic in `experiments/`
+- Evaluation/reporting in `evaluation/`
+- Config validation in `config/`
 
-## What this agent does
+## Rules
+- Keep Python 3.11+ typed APIs.
+- Preserve lifecycle: `prepare()` → `run()` → `finalize()`.
+- Use centralized dataset/path utilities; no hardcoded paths.
+- Avoid L4+ runtime dependencies and hidden fallback behavior.
 
-- Inspects workspace files and proposes minimal, correct edits
-- Keeps experiment lifecycle `prepare() / run() / finalize()` intact
-- Uses `DataManager` + `data_paths.py` for data access (no hardcoded paths)
-- Maintains Python 3.11+ compatibility
-- Updates tests when behavior changes
-
-## Boundaries (do NOT cross)
-
-- Do not import L4+ middleware packages
-- Do not bypass `DataManager` for data sources
-- Do not hardcode model names or data paths inside experiments
-- Do not change CLI flags or behavior without updating docs/tests
-
-## Ideal inputs
-
-- Desired experiment or metric changes
-- Which config fields to add/modify
-- Expected outputs/metrics or sample artifacts
-
-## Outputs
-
-- Code edits applied to the repo
-- Brief summary of changes and where they live
-- Test updates or instructions if needed
-
-## Tools usage
-
-- Use search/read tools to find relevant files
-- Use edit tools to modify files (no terminal edits for files)
-- Use Python tooling only when needed to validate behavior
-
-## Progress and questions
-
-- Report progress briefly (what you changed)
-- Ask only for missing requirements that block implementation
+## Workflow
+1. Implement minimal change in benchmark logic/config.
+2. Update tests in `tests/` for new behavior.
+3. Keep CLI behavior stable unless explicitly requested.
