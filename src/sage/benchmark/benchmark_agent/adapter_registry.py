@@ -2676,7 +2676,7 @@ Only output the JSON, nothing else."""
                 """Lazy initialization of LLM client using UnifiedInferenceClient.
 
                 Uses UnifiedInferenceClient.create() which handles:
-                1. Local vLLM API service detection (via SagePorts)
+                1. Local sageLLM API service detection (via SagePorts)
                 2. Cloud API fallback (via SAGE_CHAT_* env vars)
                 """
                 if not self._client_initialized:

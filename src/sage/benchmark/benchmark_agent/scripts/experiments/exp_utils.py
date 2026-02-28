@@ -115,8 +115,7 @@ def setup_experiment_env(seed: int = RANDOM_SEED, verbose: bool = True) -> None:
     os.environ.setdefault("SAGE_TEST_MODE", "true")
     os.environ.setdefault("PYTHONHASHSEED", str(seed))
 
-    # vLLM 配置
-    os.environ.setdefault("VLLM_ATTENTION_BACKEND", "FLASH_ATTN")
+    # 本地 LLM 相关运行配置（按需由 sageLLM 管理）
 
     # PyTorch 分布式警告抑制
     os.environ.setdefault("GLOO_SOCKET_IFNAME", "lo")
