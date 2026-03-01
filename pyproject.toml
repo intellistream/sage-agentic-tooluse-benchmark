@@ -65,10 +65,6 @@ dev = [
     "types-PyYAML>=6.0.0",
 ]
 
-all = [
-    "isage-agentic-tooluse-benchmark[dev]",
-]
-
 [project.urls]
 Homepage = "https://github.com/intellistream/sage-agentic-tooluse-benchmark"
 Documentation = "https://github.com/intellistream/sage-agentic-tooluse-benchmark#readme"
