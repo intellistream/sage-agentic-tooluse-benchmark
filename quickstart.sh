@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# quickstart.sh — sage-benchmark-agent dev environment setup
+# quickstart.sh — sage-agentic-tooluse-benchmark dev environment setup
 #
 # Usage:
 #   ./quickstart.sh               # dev mode (default): hooks + .[dev]  (includes [full])
@@ -46,7 +46,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$SCRIPT_DIR"
 
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${BOLD}${BLUE}  sage-benchmark-agent — Quick Start${NC}"
+echo -e "${BOLD}${BLUE}  sage-agentic-tooluse-benchmark — Quick Start${NC}"
 echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo ""
 
