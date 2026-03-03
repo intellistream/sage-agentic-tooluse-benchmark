@@ -15,6 +15,7 @@ import json
 import os
 import random
 import urllib.request
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
@@ -288,12 +289,12 @@ def get_embedding_client():
         EmbeddingClientAdapter 实例
     """
     try:
-        from sage.common.components.sage_embedding import (
+        from sagellm.embedding import (
             EmbeddingClientAdapter,
             EmbeddingFactory,
         )
 
-        raw_embedder = EmbeddingFactory.create("hf", model=BENCHMARK_EMBEDDING_MODEL)
+        raw_embedder = EmbeddingFactory.create("hash", dim=384)
         return EmbeddingClientAdapter(raw_embedder)
     except ImportError as e:
         print(f"  Warning: Could not create embedding client: {e}")
@@ -346,9 +347,6 @@ def create_progress_bar(total: int, desc: str = "Processing"):
 # =============================================================================
 # 实验结果数据类
 # =============================================================================
-from dataclasses import dataclass, field
-
-
 @dataclass
 class ExperimentResult:
     """单个策略的实验结果。"""

@@ -559,14 +559,12 @@ class AdapterRegistry:
             def _init_client(self):
                 if self._embedding_client is None:
                     try:
-                        from sage.common.components.sage_embedding import (
+                        from sagellm.embedding import (
                             EmbeddingClientAdapter,
                             EmbeddingFactory,
                         )
 
-                        raw_embedder = EmbeddingFactory.create(
-                            "hf", model=BENCHMARK_EMBEDDING_MODEL
-                        )
+                        raw_embedder = EmbeddingFactory.create("hash", dim=384)
                         self._embedding_client = EmbeddingClientAdapter(raw_embedder)
                     except Exception:
                         pass
@@ -650,14 +648,12 @@ class AdapterRegistry:
             def _init_client(self):
                 if self._embedding_client is None:
                     try:
-                        from sage.common.components.sage_embedding import (
+                        from sagellm.embedding import (
                             EmbeddingClientAdapter,
                             EmbeddingFactory,
                         )
 
-                        raw_embedder = EmbeddingFactory.create(
-                            "hf", model=BENCHMARK_EMBEDDING_MODEL
-                        )
+                        raw_embedder = EmbeddingFactory.create("hash", dim=384)
                         self._embedding_client = EmbeddingClientAdapter(raw_embedder)
                     except Exception:
                         pass
@@ -793,14 +789,12 @@ class AdapterRegistry:
                 if self._embedding_client is None:
                     # Try local HuggingFace embedding first
                     try:
-                        from sage.common.components.sage_embedding import (
+                        from sagellm.embedding import (
                             EmbeddingClientAdapter,
                             EmbeddingFactory,
                         )
 
-                        raw_embedder = EmbeddingFactory.create(
-                            "hf", model=BENCHMARK_EMBEDDING_MODEL
-                        )
+                        raw_embedder = EmbeddingFactory.create("hash", dim=384)
                         self._embedding_client = EmbeddingClientAdapter(raw_embedder)
                     except Exception:
                         pass
@@ -2166,22 +2160,26 @@ Only output the JSON, nothing else."""
                 try:
                     import os
 
-                    from sage.common.components.sage_embedding import (
+                    from sagellm.embedding import (
                         get_embedding_model,
                     )
 
                     # Choose embedding method based on environment
                     method = os.getenv("SAGE_EMBEDDING_METHOD", "hash")
 
-                    if method == "hf":
-                        try:
-                            self._embedder = get_embedding_model(
-                                "hf", model=BENCHMARK_EMBEDDING_MODEL
-                            )
-                        except Exception:
-                            self._embedder = get_embedding_model("hash", dim=384)
-                    else:
+                    if method not in {"hash", "mockembedder", "sagellm", "openai"}:
+                        method = "hash"
+
+                    if method == "hash":
                         self._embedder = get_embedding_model("hash", dim=384)
+                    elif method == "mockembedder":
+                        self._embedder = get_embedding_model("mockembedder", fixed_dim=384)
+                    else:
+                        self._embedder = get_embedding_model(
+                            method,
+                            model=BENCHMARK_EMBEDDING_MODEL,
+                            base_url=os.getenv("SAGE_EMBEDDING_BASE_URL", "http://127.0.0.1:8890"),
+                        )
 
                     # Pre-compute example embeddings
                     self._tool_needed_embeddings = [
@@ -2345,17 +2343,11 @@ Only output the JSON, nothing else."""
                 """Lazy initialization of embedder."""
                 if self._embedder is None:
                     try:
-                        from sage.common.components.sage_embedding import (
+                        from sagellm.embedding import (
                             get_embedding_model,
                         )
 
-                        # Try to use HF model, fallback to hash
-                        try:
-                            self._embedder = get_embedding_model(
-                                "hf", model=BENCHMARK_EMBEDDING_MODEL
-                            )
-                        except Exception:
-                            self._embedder = get_embedding_model("hash", dim=384)
+                        self._embedder = get_embedding_model("hash", dim=384)
                     except Exception:
                         pass
                 return self._embedder
