@@ -15,7 +15,7 @@
 #
 # Rules:
 #   - NEVER creates a new venv. Must be called in an existing non-venv environment.
-#   - Installs hooks via direct copy from hooks/.
+#   - Installs hooks as symlinks from hooks/ (auto-updates when hooks/ changes).
 
 set -e
 
@@ -98,7 +98,7 @@ if [ -d "$PROJECT_ROOT/hooks" ]; then
     for hook_src in "$PROJECT_ROOT/hooks"/*; do
         hook_name=$(basename "$hook_src")
         hook_dst="$PROJECT_ROOT/.git/hooks/$hook_name"
-        cp "$hook_src" "$hook_dst"
+        ln -sf "../../hooks/$hook_name" "$hook_dst"
         chmod +x "$hook_dst"
         echo -e "  ${GREEN}✓ $hook_name${NC}"
         installed=$((installed + 1))
