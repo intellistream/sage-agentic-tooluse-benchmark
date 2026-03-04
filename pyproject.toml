@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "isage-agentic-tooluse-benchmark"
-version = "0.1.6"
+version = "0.1.7"
 description = "SAGE Tool Use Benchmark - Tool selection and use evaluation framework"
 readme = "README.md"
 requires-python = ">=3.11"
