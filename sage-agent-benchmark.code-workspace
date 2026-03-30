@@ -1,0 +1,50 @@
+{
+  "folders": [
+    {
+      "name": "🎯 benchmark-agent (Core)",
+      "path": "."
+    },
+    {
+      "name": "🤖 sage-agentic (Algorithms)",
+      "path": "../sage-agentic"
+    },
+    {
+      "name": "🎓 sage-finetune (Training)",
+      "path": "../sage-finetune"
+    }
+  ],
+  "settings": {
+    "python.analysis.extraPaths": [
+      "${workspaceFolder:benchmark-agent}/src",
+      "${workspaceFolder:sage-agentic}/src",
+      "${workspaceFolder:sage-finetune}/src"
+    ],
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      "**/.pytest_cache": true,
+      "**/.ruff_cache": true,
+      "**/.mypy_cache": true
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "[python]": {
+      "editor.defaultFormatter": "ms-python.black-formatter",
+      "editor.formatOnSave": true
+    },
+    "black-formatter.args": ["--line-length", "100"],
+    "ruff.args": ["--line-length", "100"]
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "ms-python.black-formatter",
+      "charliermarsh.ruff",
+      "github.copilot",
+      "github.copilot-chat"
+    ]
+  }
+}

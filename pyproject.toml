@@ -3,9 +3,9 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "isage-benchmark-agent"
-version = "0.1.0"
-description = "SAGE Benchmark Agent - Agent capability evaluation framework"
+name = "isage-agentic-tooluse-benchmark"
+version = "0.1.7"
+description = "SAGE Tool Use Benchmark - Tool selection and use evaluation framework"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
@@ -14,9 +14,10 @@ authors = [
 keywords = [
     "sage",
     "benchmark",
-    "agent",
     "tool-selection",
+    "tool-use",
     "planning",
+    "timing-detection",
     "evaluation",
     "intellistream",
 ]
@@ -50,7 +51,10 @@ dependencies = [
 license = "MIT"
 
 [project.optional-dependencies]
+full = []
 dev = [
+    # dev includes [full] — no need for a separate extras install
+    "isage-agentic-tooluse-benchmark[full]",
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
@@ -61,18 +65,14 @@ dev = [
     "types-PyYAML>=6.0.0",
 ]
 
-all = [
-    "isage-benchmark-agent[dev]",
-]
-
 [project.urls]
-Homepage = "https://github.com/intellistream/sage-benchmark-agent"
-Documentation = "https://github.com/intellistream/sage-benchmark-agent#readme"
-Repository = "https://github.com/intellistream/sage-benchmark-agent"
-Issues = "https://github.com/intellistream/sage-benchmark-agent/issues"
+Homepage = "https://github.com/intellistream/sage-agentic-tooluse-benchmark"
+Documentation = "https://github.com/intellistream/sage-agentic-tooluse-benchmark#readme"
+Repository = "https://github.com/intellistream/sage-agentic-tooluse-benchmark"
+Issues = "https://github.com/intellistream/sage-agentic-tooluse-benchmark/issues"
 
 [project.scripts]
-sage-agent-bench = "sage.benchmark.benchmark_agent.__main__:main"
+sage-agentic-tooluse-bench = "sage.benchmark.benchmark_agent.__main__:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

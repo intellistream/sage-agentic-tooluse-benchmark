@@ -15,6 +15,7 @@ import json
 import os
 import random
 import urllib.request
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
@@ -115,8 +116,7 @@ def setup_experiment_env(seed: int = RANDOM_SEED, verbose: bool = True) -> None:
     os.environ.setdefault("SAGE_TEST_MODE", "true")
     os.environ.setdefault("PYTHONHASHSEED", str(seed))
 
-    # vLLM 配置
-    os.environ.setdefault("VLLM_ATTENTION_BACKEND", "FLASH_ATTN")
+    # 本地 LLM 相关运行配置（按需由 sageLLM 管理）
 
     # PyTorch 分布式警告抑制
     os.environ.setdefault("GLOO_SOCKET_IFNAME", "lo")
@@ -289,12 +289,12 @@ def get_embedding_client():
         EmbeddingClientAdapter 实例
     """
     try:
-        from sage.common.components.sage_embedding import (
+        from sagellm.embedding import (
             EmbeddingClientAdapter,
             EmbeddingFactory,
         )
 
-        raw_embedder = EmbeddingFactory.create("hf", model=BENCHMARK_EMBEDDING_MODEL)
+        raw_embedder = EmbeddingFactory.create("hash", dim=384)
         return EmbeddingClientAdapter(raw_embedder)
     except ImportError as e:
         print(f"  Warning: Could not create embedding client: {e}")
@@ -347,9 +347,6 @@ def create_progress_bar(total: int, desc: str = "Processing"):
 # =============================================================================
 # 实验结果数据类
 # =============================================================================
-from dataclasses import dataclass, field
-
-
 @dataclass
 class ExperimentResult:
     """单个策略的实验结果。"""

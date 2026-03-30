@@ -58,7 +58,7 @@ class ToolSelectionExperiment(BaseExperiment):
         try:
             import os
 
-            from sage.common.components.sage_embedding import EmbeddingService
+            from sagellm.embedding import EmbeddingFactory
 
             # Determine embedding method and optional model from environment
             method = os.environ.get("SAGE_EMBEDDING_METHOD") or "hf"
@@ -71,28 +71,28 @@ class ToolSelectionExperiment(BaseExperiment):
                 """Wrapper to adapt EmbeddingService to selector interface."""
 
                 def __init__(self):
-                    cfg = {
-                        "method": method,
-                        "model": model,
-                        "api_key": api_key,
-                        "base_url": base_url,
-                        "normalize": True,
-                    }
+                    resolved_method = method if method in {"hash", "mockembedder", "sagellm", "openai"} else "hash"
                     try:
-                        self.service = EmbeddingService(cfg)
-                        self.service.setup()
+                        self.embedder = EmbeddingFactory.create(
+                            resolved_method,
+                            model=model,
+                            base_url=base_url,
+                            api_key=api_key,
+                            normalize=True,
+                            dim=384,
+                        )
                     except Exception:
-                        # Fallback to mockembedder if configured method not available
-                        cfg["method"] = "mockembedder"
-                        self.service = EmbeddingService(cfg)
-                        self.service.setup()
+                        self.embedder = EmbeddingFactory.create("mockembedder", fixed_dim=384)
 
                 def embed(self, texts, model=None, batch_size=32):
                     """Embed texts and return numpy array."""
                     import numpy as np
 
-                    result = self.service.embed(texts, batch_size=batch_size)
-                    return np.array(result["vectors"])
+                    if hasattr(self.embedder, "embed_batch"):
+                        vectors = self.embedder.embed_batch(texts)
+                    else:
+                        vectors = [self.embedder.embed(t) for t in texts]
+                    return np.array(vectors)
 
                 def cleanup(self):
                     try:

@@ -189,9 +189,9 @@ LLM_MODELS_LLAMA = [
 ]
 
 
-def _start_vllm_server(model_id: str, tensor_parallel: int = 1, port: int = 8901) -> bool:
+def _start_llm_server(model_id: str, tensor_parallel: int = 1, port: int = 8901) -> bool:
     """
-    启动 vLLM 服务器。
+    启动本地 LLM 服务器（sageLLM）。
 
     Args:
         model_id: HuggingFace 模型 ID
@@ -207,22 +207,19 @@ def _start_vllm_server(model_id: str, tensor_parallel: int = 1, port: int = 8901
     import requests  # type: ignore[import-untyped]
 
     # 先停止已有服务
-    _stop_vllm_server(port)
+    _stop_llm_server(port)
     time.sleep(2)
 
-    print(f"      Starting vLLM server for {model_id}...")
+    print(f"      Starting LLM server for {model_id}...")
 
     cmd = [
-        "vllm",
+        "sage",
+        "llm",
         "serve",
+        "--model",
         model_id,
         "--port",
         str(port),
-        "--gpu-memory-utilization",
-        "0.85",
-        "--max-model-len",
-        "4096",
-        "--trust-remote-code",
     ]
 
     if tensor_parallel > 1:
@@ -237,7 +234,7 @@ def _start_vllm_server(model_id: str, tensor_parallel: int = 1, port: int = 8901
             start_new_session=True,
         )
     except Exception as e:
-        print(f"      Failed to start vLLM: {e}")
+        print(f"      Failed to start LLM server: {e}")
         return False
 
     # 等待服务就绪 (最多 5 分钟)
@@ -248,18 +245,18 @@ def _start_vllm_server(model_id: str, tensor_parallel: int = 1, port: int = 8901
         try:
             resp = requests.get(f"http://localhost:{port}/v1/models", timeout=5)
             if resp.status_code == 200:
-                print(f"      vLLM server ready (took {time.time() - start_time:.0f}s)")
+                print(f"      LLM server ready (took {time.time() - start_time:.0f}s)")
                 return True
         except Exception:
             pass
         time.sleep(5)
 
-    print("      Timeout waiting for vLLM server")
+    print("      Timeout waiting for LLM server")
     return False
 
 
-def _stop_vllm_server(port: int = 8901) -> None:
-    """停止 vLLM 服务器。"""
+def _stop_llm_server(port: int = 8901) -> None:
+    """停止本地 LLM 服务器。"""
     import subprocess
 
     # 通过端口找进程并杀掉
@@ -422,8 +419,8 @@ def run_llm_scaling_experiment(
     for model_id, model_size, tensor_parallel in models:
         print(f"\n    [{model_size}] {model_id}")
 
-        # 启动 vLLM 服务
-        if not _start_vllm_server(model_id, tensor_parallel, port):
+        # 启动本地 LLM 服务
+        if not _start_llm_server(model_id, tensor_parallel, port):
             print(f"      Skipping {model_size} (failed to start)")
             continue
 
@@ -439,7 +436,7 @@ def run_llm_scaling_experiment(
 
         finally:
             # 停止服务，释放 GPU 内存
-            _stop_vllm_server(port)
+            _stop_llm_server(port)
             import time
 
             time.sleep(5)  # 等待 GPU 内存释放

@@ -51,3 +51,9 @@ benchmark framework for agent capability evaluation (tool selection, planning, t
 
 - Report progress briefly (what you changed)
 - Ask only for missing requirements that block implementation
+
+## Polyrepo coordination rules
+
+- Treat this repository as the only local source tree; do not assume sibling repositories exist.
+- If a task spans multiple repositories, implement only this repo and explicitly list follow-up repo/version-bump actions.
+- Do not create `venv`/`.venv`; always use the existing configured Python environment.

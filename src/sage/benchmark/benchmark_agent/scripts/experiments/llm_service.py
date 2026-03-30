@@ -2,7 +2,7 @@
 LLM Service Manager - LLM 服务管理模块
 
 提供统一的 LLM 服务管理功能:
-- 启动/停止 vLLM 服务
+- 启动/停止 sageLLM 服务
 - 检查服务状态
 - 多端口管理
 """
@@ -98,7 +98,7 @@ def start_llm_service(
     timeout: int = 120,
 ) -> bool:
     """
-    启动 vLLM 服务。
+    启动 sageLLM 服务。
 
     Args:
         model: 模型 ID
@@ -125,16 +125,13 @@ def start_llm_service(
 
     # 构建命令
     cmd = [
-        sys.executable,
-        "-m",
-        "vllm.entrypoints.openai.api_server",
+        "sage",
+        "llm",
+        "serve",
         "--model",
         model,
         "--port",
         str(port),
-        "--gpu-memory-utilization",
-        str(gpu_memory),
-        "--trust-remote-code",
     ]
 
     try:

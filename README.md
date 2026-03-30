@@ -1,6 +1,6 @@
-# SAGE Benchmark Agent
+# SAGE Agentic Tool Use Benchmark
 
-Configuration-driven experiment framework for evaluating agent capabilities.
+Configuration-driven experiment framework for evaluating tool selection and use capabilities.
 
 ## Features
 
@@ -12,13 +12,13 @@ Configuration-driven experiment framework for evaluating agent capabilities.
 
 ```bash
 # Install
-pip install isage-benchmark-agent
+pip install isage-agentic-tooluse-benchmark
 
 # Run tool selection experiment
-sage-agent-bench tool-selection --config config/tool_selection_exp.yaml
+sage-agentic-tooluse-bench tool-selection --config config/tool_selection_exp.yaml
 
 # Run planning experiment
-sage-agent-bench planning --config config/planning_exp.yaml
+sage-agentic-tooluse-bench planning --config config/planning_exp.yaml
 ```
 
 ## Documentation
@@ -29,8 +29,8 @@ See [benchmark_agent/README.md](src/sage/benchmark/benchmark_agent/README.md) fo
 
 ```bash
 # Clone
-git clone https://github.com/intellistream/sage-benchmark-agent.git
-cd sage-benchmark-agent
+git clone https://github.com/intellistream/sage-agentic-tooluse-benchmark.git
+cd sage-agentic-tooluse-benchmark
 
 # Setup virtual environment
 python -m venv .venv
